@@ -14,20 +14,18 @@ function setUsername(token, username) {
 
 exports.authenticate = function (hook_name, context, cb) {
   console.log("ep_jwt.authenticate");
+  // console.log("ep_jwt.authenticate", context.req);
   if (context.req.cookies.token) {
     jwt.verify(context.req.cookies.token, settings.users.jwt.secret, (e, decoded) => {
       // console.log("ep_jwt.authenticate", e, decoded);
       if (!e) {
         console.log("ep_jwt.authenticate: successful authentication");
-        settings.globalUserName = decoded.username;
         context.req.session.user = decoded;
-        if (context.resource.match(/^\/admin/)) {
-          console.log("ep_jwt.authenticate: attempting to authenticate along administrative path %s", context.resource);
-          if (decoded.username && -1 < settings.users.jwt.admins.indexOf(decoded.username)) {
-            console.log("ep_jwt.authenticate: username %s, is_admin", decoded.username);
-            context.req.session.user.is_admin = true;
-          }
+        if (-1 < settings.users.jwt.admins.indexOf(decoded.username)) {
+          console.log("ep_jwt.authenticate: username %s, is_admin", decoded.username);
+          context.req.session.user.is_admin = true;
         }
+        settings.globalUserName = decoded.username;
         return cb([true]);
       } else {
         console.log("ep_jwt.authenticate: failed authentication no token cookies");
@@ -52,13 +50,13 @@ exports.authorize = function (hook_name, context, cb) {
       // console.log("ep_jwt.authorize", e, decoded);
       if (!e) {
         console.log("ep_jwt.authorize: successful authorization");
-        // if (context.resource.match(/^\/admin/)) {
-        //   console.log("ep_jwt.authorize: attempting to authorize along administrative path %s", context.resource);
-        //   if (decoded.username && -1 < settings.users.jwt.admins.indexOf(decoded.username)) {
-        //     console.log("ep_jwt.authorize: username %s, is_admin", decoded.username);
-        //     context.req.session.user.is_admin = true;
-        //   }
-        // }
+        if (context.resource.match(/^\/admin/)) {
+          console.log("ep_jwt.authorize: attempting to authorize along administrative path %s", context.resource);
+          if (decoded.username && -1 < settings.users.jwt.admins.indexOf(decoded.username)) {
+            console.log("ep_jwt.authorize: username %s, is_admin", decoded.username);
+            context.req.session.user.is_admin = true;
+          }
+        }
         return cb([true]);
       } else {
         console.log("ep_jwt.authorize: failed authorization no token cookies");
