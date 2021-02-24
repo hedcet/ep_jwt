@@ -1,0 +1,12 @@
+{
+  "parts": [
+    {
+      "hooks": {
+        "authenticate": "ep_jwt/ep_jwt",
+        "authorize": "ep_jwt/ep_jwt",
+        "handleMessage": "ep_jwt/ep_jwt"
+      },
+      "name": "ep_jwt"
+    }
+  ]
+}
