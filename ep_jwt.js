@@ -21,7 +21,7 @@ exports.authenticate = function (hook_name, context, cb) {
       if (!e) {
         console.log("ep_jwt.authenticate: successful authentication");
         context.req.session.user = decoded;
-        if (-1 < settings.users.jwt.admins.indexOf(decoded.username)) {
+        if (-1 < settings.users.jwt.admins.split("|").indexOf(decoded.username)) {
           console.log("ep_jwt.authenticate: username %s, is_admin", decoded.username);
           context.req.session.user.is_admin = true;
         }
@@ -52,7 +52,7 @@ exports.authorize = function (hook_name, context, cb) {
         console.log("ep_jwt.authorize: successful authorization");
         if (context.resource.match(/^\/admin/)) {
           console.log("ep_jwt.authorize: attempting to authorize along administrative path %s", context.resource);
-          if (decoded.username && -1 < settings.users.jwt.admins.indexOf(decoded.username)) {
+          if (decoded.username && -1 < settings.users.jwt.admins.split("|").indexOf(decoded.username)) {
             console.log("ep_jwt.authorize: username %s, is_admin", decoded.username);
             context.req.session.user.is_admin = true;
           }
