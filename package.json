@@ -1,13 +1,15 @@
 {
-  "author": {
-    "name": "Linto Cheeran",
-    "email": "linto.cet@gmail.com"
-  },
+  "author": "Linto Cheeran <linto.cet@gmail.com>",
   "dependencies": {
     "jsonwebtoken": "^8.5.1"
   },
   "description": "etherpad-lite jwt authenticate/authorize",
   "homepage": "https://github.com/hedcet/ep_jwt#readme",
   "name": "ep_jwt",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HedCET/ep_jwt.git"
+  },
+  "license": "private"
 }
